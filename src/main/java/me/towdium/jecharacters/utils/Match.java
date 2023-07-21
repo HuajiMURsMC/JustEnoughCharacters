@@ -10,11 +10,9 @@ import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.searchtree.SuffixArray;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.WeakHashMap;
+import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -102,11 +100,16 @@ public class Match {
         TreeSearcher<T> tree = searcher();
 
         @Override
-        public void getSearchResults(String word, Set<T> results) {
+        public void getSearchResults(String word, Consumer<Collection<T>> resultsConsumer) {
             if (JechConfig.enableVerbose) {
                 JustEnoughCharacters.logger.info("FakeTree:search(" + word + ')');
             }
-            results.addAll(tree.search(word));
+            resultsConsumer.accept(tree.search(word));
+        }
+
+        @Override
+        public void getAllElements(Consumer<Collection<T>> resultsConsumer) {
+            resultsConsumer.accept(tree.search(""));
         }
 
         @Override
@@ -118,14 +121,14 @@ public class Match {
         }
 
         @Override
-        public void getAllElements(Set<T> results) {
-            results.addAll(tree.search(""));
+        public String statistics() {
+            return "JechFakeTree: No statistics available";
         }
 
     }
 
     public static class FakeArray<T> extends SuffixArray<T> {
-        TreeSearcher<T> tree = searcher();
+        private final TreeSearcher<T> tree = searcher();
 
         @Override
         public void add(T v, String k) {

@@ -11,7 +11,10 @@ targetCompatibility = JavaVersion.VERSION_17
 
 repositories {
     mavenCentral()
-    maven { url 'https://dvs1.progwml6.com/files/maven/' }
+    maven {
+        name = "Jared's maven"
+        url = "https://maven.blamejared.com/"
+    }
     maven { url 'https://jitpack.io' }
     maven {
         name "Modmaven"
@@ -19,6 +22,10 @@ repositories {
         content {
             includeGroup 'appeng'
         }
+    }
+    maven {
+        name = 'ParchmentMC'
+        url = 'https://maven.parchmentmc.org'
     }
 }
 
